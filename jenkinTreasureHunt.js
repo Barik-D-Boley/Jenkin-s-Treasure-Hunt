@@ -780,20 +780,20 @@ const input = [
     "BBFBFFFLLL",
     "FBFBFBFLRR",
     "BFBFFFFRLL",
-  ];
+];
 
+// Setting up variables that will be used later
 let coords = [];
 let gridNums = [];
+let missingSquare;
+const reducer = (previousValue, currentValue) => previousValue + currentValue;
 
-//Used to get the numbers neccessary to the questions
+// Used to get the numbers neccessary for the questions
 function backbone() {
-    //Resets these 2 arrays so the function can be run infintie times without changing
     coords = [];
     gridNums = [];
-
-    //For Loop with nested for loops so it can compare each letter in the sequence, then go onto the next sequence
+// For Loop with nested for loops so it can compare each letter in the sequence, then go onto the next sequence
     for (i = 0; i < input.length; i++) {
-        //Setting up variables that will be used later
         let letters = input[i].split('');
         
         let front = 127;
@@ -803,10 +803,9 @@ function backbone() {
         let left = 7;
         let right = 0;
         let longitude = 0;
-
-        //For Loop for the F/B part of the sequence
+    // For Loop for the F/B part of the sequence
         for (j = 0; j < 7; j++) {
-            //Finds the average between the 2 numbers and sets it to the differnt number depending on the input
+        // Finds the average between the 2 numbers and sets it to the differnt number depending on the input
             latitude = (front + back) / 2;
 
             if (letters[j] == 'F') {
@@ -818,9 +817,9 @@ function backbone() {
             }
         }
 
-        //For Loop for the L/R part of the sequence
+    // For Loop for the L/R part of the sequence
         for (j = 7; j < 10; j++) {
-            //Finds the average between the 2 numbers and sets it to the differnt number depending on the input
+        // Finds the average between the 2 numbers and sets it to the different number depending on the input
             longitude = (left + right) / 2;
 
             if (letters[j] == 'L') {
@@ -831,26 +830,25 @@ function backbone() {
                 right = longitude;
             }
         }
-
-        
-        coords.push([[latitude], [longitude]]);
+    // Pushes the coordinates, creates the number        
+        coords.push([latitude, longitude]);
         let oneGridNum = (latitude * 8) + longitude;
+    // Checks if the number is less than 100 to make sure the numbers stay in order
         if (oneGridNum < 100) {
             oneGridNum = "0" + oneGridNum;
         }
-
         gridNums.push(oneGridNum);
     }
-    console.log(gridNums);
 }
 
+// The answer to question 1 is 832 and 51
 function questionOne() {
     backbone(input);
 
     let gridMax = 0;
     let gridMin = 9999;
     let grid = 0;
-
+// For each coordiante, sees if the grid number is less or graeter than the smallest and greatest values, and changes them if they are
     coords.forEach(lat => {
         grid = (lat[0] * 8) + Number(lat[1]);
 
@@ -861,18 +859,78 @@ function questionOne() {
             gridMin = grid;
         }
     });
-    console.log(`The answer to Question 1 is ${gridMax} and ${gridMin}`)
+    console.log(`The answer to question 1 is ${gridMax} and ${gridMin}`)
 }
 questionOne();
 
-function questionTwo() {
+// The answer to question 2 is 517
+function questionTwo(boolean) {
     backbone(input);
-
+// The starting number is 51, so this for loop checks if the current number is 51 more than the index value
     for (i = 0; i < gridNums.length; i++) {
         if (gridNums.sort()[i] != (i + 51)) {
-            console.log("The answer to Question 2 is " + Number(gridNums.sort()[i] - 1));
+            missingSquare = Number(gridNums.sort()[i] - 1);
+            if (boolean == true) {console.log(`The answer to question 2 is ${missingSquare}`)};
             break;
         }
     };
 }
-questionTwo();
+questionTwo(true);
+
+// The answer to quesiton 4 is BFFFFFFRLR
+function questionThree() {
+    questionTwo(false);
+
+    let firstHalf;
+    let lastHalf;
+// Subtracts i from the given number to see if the given number can be cleanly divided by 8, and changes the numbers if they are
+    for (i = 0; i < 8; i++) {
+        if (Number.isInteger((missingSquare - i) / 8)) {
+            firstHalf = (missingSquare - i) / 8;
+            lastHalf = i;
+        }
+    }
+// Turns the firstHalf and lastHalf variables into binary, then combines them in a string
+    let binary = (firstHalf.toString(2) + lastHalf.toString(2)).toString();
+    let splitBinary = binary.split('');
+// For Loop for the F/B part of the sequence
+    for (j = 0; j < 7; j++) {
+    // If the number is 0, it gets changed to F, otherwise it becomes B
+        if (splitBinary[j] == 0) {
+            splitBinary[j] = 'F';
+        } else {
+            splitBinary[j] = 'B'
+        }
+    }
+// For Loop for the L/R part of the sequence
+    for (j = 7; j < 10; j++) {
+    // If the number is 0, it gets changed to L, otherwise it becomes R
+        if (splitBinary[j] == 0) {
+            splitBinary[j] = 'L';
+        } else {
+            splitBinary[j] = 'R'
+        }
+    }
+
+    console.log(`The answer to question 3 is ${splitBinary.reduce(reducer)}`);
+}
+questionThree();
+
+// The answer to question 4 is 116964
+function questionFour() {
+    backbone(input);
+
+    let row = [];
+    let col = [];
+// Pushes all latititude and longitude numbers into their own arrays
+    coords.forEach(lat => {
+        row.push(lat[0]);
+        col.push(lat[1])
+    })
+// Uses the Reducer function to add the numbers together
+    let reducedRow = row.reduce(reducer);
+    let reducedCol = col.reduce(reducer);
+
+    console.log(`The answer to question 4 is ${(reducedRow * reducedCol) / 1000}`);
+}
+questionFour();
