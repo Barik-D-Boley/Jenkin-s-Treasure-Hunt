@@ -881,34 +881,25 @@ questionTwo(true);
 function questionThree() {
     questionTwo(false);
 
-    let firstHalf;
-    let lastHalf;
-// Subtracts i from the given number to see if the given number can be cleanly divided by 8, and changes the numbers if they are
-    for (i = 0; i < 8; i++) {
-        if (Number.isInteger((missingSquare - i) / 8)) {
-            firstHalf = (missingSquare - i) / 8;
-            lastHalf = i;
-        }
-    }
 // Turns the firstHalf and lastHalf variables into binary, then combines them in a string
-    let binary = (firstHalf.toString(2) + lastHalf.toString(2)).toString();
+    let binary = (missingSquare.toString(2)).toString();
     let splitBinary = binary.split('');
 // For Loop for the F/B part of the sequence
-    for (j = 0; j < 7; j++) {
+    for (i = 0; i < 7; i++) {
     // If the number is 0, it gets changed to F, otherwise it becomes B
-        if (splitBinary[j] == 0) {
-            splitBinary[j] = 'F';
+        if (splitBinary[i] == 0) {
+            splitBinary[i] = 'F';
         } else {
-            splitBinary[j] = 'B'
+            splitBinary[i] = 'B'
         }
     }
 // For Loop for the L/R part of the sequence
-    for (j = 7; j < 10; j++) {
+    for (i = 7; i < 10; i++) {
     // If the number is 0, it gets changed to L, otherwise it becomes R
-        if (splitBinary[j] == 0) {
-            splitBinary[j] = 'L';
+        if (splitBinary[i] == 0) {
+            splitBinary[i] = 'L';
         } else {
-            splitBinary[j] = 'R'
+            splitBinary[i] = 'R'
         }
     }
 
