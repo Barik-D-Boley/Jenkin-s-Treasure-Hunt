@@ -877,7 +877,7 @@ function questionTwo(boolean) {
 }
 questionTwo(true);
 
-// The answer to quesiton 4 is BFFFFFFRLR
+// The answer to question 4 is BFFFFFFRLR
 function questionThree() {
     questionTwo(false);
 
